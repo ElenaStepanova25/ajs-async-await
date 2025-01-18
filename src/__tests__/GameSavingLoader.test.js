@@ -14,22 +14,21 @@ test('Testing resolve', async () => {
     bufferView[i] = data.charCodeAt(i);
   }
   read.mockResolvedValue(bufferView);
-  GameSavingLoader.load().then((obj) => {
-    expect(obj).toEqual(
-      {
-        id: 9,
-        created: 1546300800,
-        userInfo: {
-          id: 1, name: 'Hitman', level: 10, points: 2000,
-        },
+  const result = await GameSavingLoader.load(bufferView);
+  expect(result).toEqual(
+    {
+      id: 9,
+      created: 1546300800,
+      userInfo: {
+        id: 1, name: 'Hitman', level: 10, points: 2000,
       },
-    );
-  });
+    },
+  );
 });
 
   
 
 test('Testing reject', async () => {
   read.mockResolvedValue(new ArrayBuffer(0));
-  await expect(GameSavingLoader.load()).rejects.toThrow('Wrong string format!');
+  await expect(GameSavingLoader.load(new ArrayBuffer(0))).rejects.toThrow('Wrong string format!');
 });

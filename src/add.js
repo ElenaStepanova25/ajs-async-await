@@ -1,4 +1,12 @@
 import GameSavingLoader from './GameSavingLoader';
+import read from './reader';
 
-GameSavingLoader.load()
-  .then((data) => data, () => new Error('Saving error!'));
+(async () => {
+  try {
+    const bufferView = await read();
+    const result = await GameSavingLoader.load(bufferView);
+    console.log(result);
+  } catch (error) {
+    console.error(error.message);
+  }
+})();

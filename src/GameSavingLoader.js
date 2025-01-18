@@ -8,21 +8,16 @@
 //  }
 //}
 
-import GameSaving from './GameSaving';
-import json from './parser';
-import read from './reader';
 
-export default class GameSavingLoader {
-  static load() {
-    return read()
-      .then((data) => json(data))
-      .then((value) => {
-        try {
-          const stringJSON = JSON.parse(value);
-          return new GameSaving(stringJSON.id, stringJSON.created, stringJSON.userInfo);
-        } catch (SyntaxError) {
-          throw new Error('Wrong string format!');
-        }
-      });
+class GameSavingLoader {
+  static async load(bufferView) {
+    if (bufferView.byteLength === 0) {
+      throw new Error('Wrong string format!');
+    }
+    const jsonString = String.fromCharCode.apply(null, bufferView);
+    const json = JSON.parse(jsonString);
+    return json;
   }
 }
+
+export default GameSavingLoader;
